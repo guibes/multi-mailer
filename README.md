@@ -8,6 +8,7 @@ A tool to send email using multiple providers, implemented in cloud native.
 - Install go modules using `go mod download`
 - Use .env file to configure your envs and export it `export $(cat .env | xargs)`
 - Run the migrations `go run ./cmd/migrate`
+- Run the project `go run ./cmd/api`
 
 ## Create a new migration
 
