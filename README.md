@@ -14,3 +14,11 @@ A tool to send email using multiple providers, implemented in cloud native.
 
 - Install [goose](https://github.com/pressly/goose)
 - Run `cd /migrations && goose <migration-name> sql && cd ..`
+
+## TODO
+
+- [ ] Sendgrid integration
+- [ ] List another email clients
+- [ ] GUI
+- [ ] CLI
+
