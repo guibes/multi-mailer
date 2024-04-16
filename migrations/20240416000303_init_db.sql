@@ -7,8 +7,9 @@ CREATE TABLE providers (
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     is_default BOOLEAN NOT NULL DEFAULT FALSE,
     configurations TEXT, -- Assuming JSON or serialized string for configurations
-    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
-    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc')
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
+    deleted_at TIMESTAMP WITH TIME ZONE
 );
 CREATE TABLE email_messages (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -20,8 +21,9 @@ CREATE TABLE email_messages (
     body TEXT NOT NULL,
     body_format VARCHAR(50) DEFAULT 'plain', -- 'plain' or 'html'
     attachments JSON, -- JSON array of attachment details
-    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
-    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc')
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
+    deleted_at TIMESTAMP WITH TIME ZONE
 );
 CREATE TABLE email_logs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -30,7 +32,7 @@ CREATE TABLE email_logs (
     recipient_email VARCHAR(255) NOT NULL,
     subject VARCHAR(255),
     status VARCHAR(255) NOT NULL,
-    timestamp TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
     FOREIGN KEY (provider_id) REFERENCES providers(id),
     FOREIGN KEY (email_message_id) REFERENCES email_messages(id)
 );

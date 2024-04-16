@@ -10,6 +10,7 @@ import (
 
 	"myapp/api/resource/book"
 	"myapp/api/resource/health"
+	"myapp/api/resource/provider"
 	"myapp/api/router/middleware"
 	"myapp/api/router/middleware/requestlog"
 )
@@ -28,7 +29,13 @@ func New(l *zerolog.Logger, v *validator.Validate, db *gorm.DB) *chi.Mux {
 		r.Method(http.MethodPost, "/books", requestlog.NewHandler(bookAPI.Create, l))
 		r.Method(http.MethodGet, "/books/{id}", requestlog.NewHandler(bookAPI.Read, l))
 		r.Method(http.MethodPut, "/books/{id}", requestlog.NewHandler(bookAPI.Update, l))
-		r.Method(http.MethodDelete, "/books/{id}", requestlog.NewHandler(bookAPI.Delete, l))
+
+		providerAPI := provider.New(l, v, db)
+		r.Method(http.MethodGet, "/providers", requestlog.NewHandler(providerAPI.List, l))
+		r.Method(http.MethodPost, "/providers", requestlog.NewHandler(providerAPI.Create, l))
+		r.Method(http.MethodGet, "/providers/{id}", requestlog.NewHandler(providerAPI.Read, l))
+		r.Method(http.MethodPut, "/providers/{id}", requestlog.NewHandler(providerAPI.Update, l))
+		r.Method(http.MethodDelete, "/providers/{id}", requestlog.NewHandler(providerAPI.Delete, l))
 	})
 
 	return r
