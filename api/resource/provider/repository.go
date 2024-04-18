@@ -43,7 +43,7 @@ func (r *Repository) Read(id uuid.UUID) (*Provider, error) {
 
 func (r *Repository) Update(provider *Provider) (int64, error) {
 	result := r.db.Model(&Provider{}).
-		Select("Title", "Author", "PublishedDate", "ImageURL", "Description", "UpdatedAt").
+		Select("ProviderName", "isActive", "isDefault", "Configurations", "UpdatedAt").
 		Where("id = ?", provider.ID).
 		Updates(provider)
 

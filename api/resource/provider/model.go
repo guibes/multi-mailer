@@ -4,41 +4,44 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type DTO struct {
-	ID            string `json:"id"`
-	Title         string `json:"title"`
-	Author        string `json:"author"`
-	PublishedDate string `json:"published_date"`
-	ImageURL      string `json:"image_url"`
-	Description   string `json:"description"`
+	ID             string `json:"id"`
+	ProviderName   string `json:"provider_name"`
+	IsActive       bool   `json:"is_active"`
+	IsDefault      bool   `json:"is_default"`
+	Configurations string `json:"configurations"`
 }
 
 type Form struct {
-	Title         string `json:"title" form:"required,max=255"`
-	Author        string `json:"author" form:"required,alpha_space,max=255"`
-	PublishedDate string `json:"published_date" form:"required,datetime=2006-01-02"`
-	ImageURL      string `json:"image_url" form:"url"`
-	Description   string `json:"description"`
+	ProviderName   string `json:"provider_name" form:"required,max=255"`
+	IsActive       bool   `json:"is_active" form:"required,boolean"`
+	IsDefault      bool   `json:"is_default" form:"required,boolean"`
+	Configurations string `json:"configurations" validate:"required,json"`
 }
 
 type Provider struct {
-	ID             uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"` // UUID as primary key
-	ProviderName   string    `gorm:"size:255;not null"`                               // Name of the provider
-	IsActive       bool      `gorm:"not null;default:true"`                           // Whether the provider is active
-	IsDefault      bool      `gorm:"not null;default:false"`                          // Whether the provider is the default choice
-	Configurations string    `gorm:"type:text"`                                       // Configuration as JSON or serialized string
-	CreatedAt      time.Time `gorm:"autoCreateTime"`                                  // Automatically handle created timestamp
-	UpdatedAt      time.Time `gorm:"autoUpdateTime"`
-	DeletedAt      time.Time `gorm:"autoDeleteTime"` // Automatically handle updated timestamp
+	ID             uuid.UUID      `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+	ProviderName   string         `gorm:"size:255;not null"`
+	IsActive       bool           `gorm:"not null;default:true"`
+	IsDefault      bool           `gorm:"not null;default:false"`
+	Configurations string         `gorm:"type:text"`
+	CreatedAt      time.Time      `gorm:"autoCreateTime"`
+	UpdatedAt      time.Time      `gorm:"autoUpdateTime"`
+	DeletedAt      gorm.DeletedAt `gorm:"index"`
 }
 
 type Providers []*Provider
 
 func (b *Provider) ToDto() *DTO {
 	return &DTO{
-		ID: b.ID.String(),
+		ID:             b.ID.String(),
+		ProviderName:   b.ProviderName,
+		IsActive:       b.IsActive,
+		IsDefault:      b.IsDefault,
+		Configurations: b.Configurations,
 	}
 }
 
@@ -53,5 +56,12 @@ func (bs Providers) ToDto() []*DTO {
 
 func (f *Form) ToModel() *Provider {
 
-	return &Provider{}
+	return &Provider{
+		ProviderName:   f.ProviderName,
+		IsActive:       f.IsActive,
+		IsDefault:      f.IsDefault,
+		Configurations: f.Configurations,
+		CreatedAt:      time.Now(),
+		UpdatedAt:      time.Now(),
+	}
 }

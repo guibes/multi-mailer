@@ -101,14 +101,17 @@ func (a *API) Create(w http.ResponseWriter, r *http.Request) {
 	newProvider := form.ToModel()
 	newProvider.ID = uuid.New()
 
-	book, err := a.repository.Create(newProvider)
+	fmt.Println(newProvider)
+	fmt.Println(form)
+
+	provider, err := a.repository.Create(newProvider)
 	if err != nil {
 		a.logger.Error().Str(l.KeyReqID, reqID).Err(err).Msg("")
 		e.ServerError(w, e.RespDBDataInsertFailure)
 		return
 	}
 
-	a.logger.Info().Str(l.KeyReqID, reqID).Str("id", book.ID.String()).Msg("new provider created")
+	a.logger.Info().Str(l.KeyReqID, reqID).Str("id", provider.ID.String()).Msg("new provider created")
 	w.WriteHeader(http.StatusCreated)
 }
 

@@ -27,6 +27,7 @@ The docs can be previwed on [Swagger Editor](https://editor.swagger.io)
 ## TODO
 
 - [ ] Sendgrid integration
+- [ ] Mailchimp
 - [ ] List another email clients
 - [ ] GUI
 - [ ] CLI
